@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>ORION AR EDU — Circulação Sanguínea</title>
+
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="intro" class="panel">
+    <div class="brand">ORION AR EDU</div>
+    <h1>Circulação Sanguínea</h1>
+    <p>Aponte a câmera para a página do material didático.</p>
+    <button id="startButton">INICIAR EXPERIÊNCIA AR</button>
+    <small>Safari • iPhone • iPad</small>
+  </div>
+
+  <div id="hud" class="hud hidden">
+    <div class="hud-title">CIRCULAÇÃO SANGUÍNEA</div>
+    <div class="status" id="status">Procurando a imagem…</div>
+    <div class="actions">
+      <button type="button" data-action="flow">▶ Fluxo</button>
+      <button type="button" data-action="pulse">♥ Coração</button>
+      <button type="button" data-action="narration">🔊 Narração</button>
+      <button type="button" data-action="quiz">? Quiz</button>
+    </div>
+  </div>
+
+  <div id="quiz" class="quiz hidden">
+    <div class="quiz-card">
+      <h2>Quiz rápido</h2>
+      <p>Qual câmara do coração bombeia o sangue rico em oxigênio para o corpo?</p>
+      <button data-answer="no">Átrio direito</button>
+      <button data-answer="yes">Ventrículo esquerdo</button>
+      <button data-answer="no">Ventrículo direito</button>
+      <p id="quizResult" aria-live="polite"></p>
+      <button id="closeQuiz">Fechar</button>
+    </div>
+  </div>
+
+  <a-scene
+    id="arScene"
+    mindar-image="imageTargetSrc: targets.mind; maxTrack: 1; uiScanning: no; uiLoading: no;"
+    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    embedded
+    class="hidden">
+
+    <a-assets>
+      <img id="targetImage" src="assets/target.jpg">
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <!-- Target coordinate system: target width = 1 unit; height follows portrait ratio. -->
+    <a-entity id="target" mindar-image-target="targetIndex: 0">
+
+      <!-- Transparent plane aligned to the target. It helps keep the AR content visually anchored. -->
+      <a-plane
+        src="#targetImage"
+        width="1"
+        height="1.5"
+        position="0 0 0"
+        material="transparent: true; opacity: 0.0">
+      </a-plane>
+
+      <!-- Central heart highlight -->
+      <a-ring
+        id="heartGlow"
+        position="0.00 -0.08 0.03"
+        radius-inner="0.135"
+        radius-outer="0.155"
+        color="#ff4b4b"
+        material="shader: flat; opacity: 0.0">
+      </a-ring>
+
+      <!-- Blood-flow particles are positioned in target coordinates. -->
+      <a-entity id="flowLayer"></a-entity>
+
+    </a-entity>
+  </a-scene>
+
+  <script src="app.js"></script>
+</body>
+</html>
